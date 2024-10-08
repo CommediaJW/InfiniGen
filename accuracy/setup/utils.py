@@ -1,6 +1,6 @@
 import os
 def set_symlink(model_type, fname):
-    model_path = "/nfs/jwyi/workspace/kvclus/kvclus_venv/lib/python3.8/site-packages/transformers/models/" + model_type
+    model_path = "../transformers/src/transformers/models/" + model_type
     linker_path = os.path.realpath("../src/" + fname)
     if not os.path.exists(linker_path):
         print(f"No file exists at {linker_path}")

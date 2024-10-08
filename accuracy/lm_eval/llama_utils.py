@@ -4,7 +4,7 @@ import os
 from fastchat.model import get_conversation_template
 
 def set_symlink(model_type, fname):
-    model_path = "/nfs/jwyi/workspace/kvclus/infinigen_venv/lib/python3.8/site-packages/transformers/models/" + model_type
+    model_path = "../transformers/src/transformers/models/" + model_type
     linker_path = os.path.realpath("../src/" + fname)
     if not os.path.exists(linker_path):
         print(f"No file exists at {linker_path}")
@@ -108,14 +108,15 @@ def llama_load_model_and_tokenizer(args, model_name_or_path, **kwargs):
     )
     if args.skewing_matrix_path is not None:
         A = torch.load(args.skewing_matrix_path)
+
     for layer in range(len(model.model.layers)):
         model.model.layers[layer].self_attn.partial_weight_ratio = args.partial_weight_ratio
-        model.model.layers[layer].self_attn.partial_weight_q = torch.load(args.partial_weight_path + "/partial_weight_q_" + str(layer) + ".pt")
+        model.model.layers[layer].self_attn.register_buffer("partial_weight_q", torch.load(args.partial_weight_path + "/partial_weight_q_" + str(layer) + ".pt"))
         model.model.layers[layer].self_attn.alpha = args.alpha
         model.model.layers[layer].self_attn.capacity = args.capacity
         model.model.layers[layer].self_attn.budget = args.budget
         if args.skewing_matrix_path is not None:
-            model.model.layers[layer].self_attn.skewing_matrix = A[layer]
+            model.model.layers[layer].self_attn.register_buffer("skewing_matrix", A[layer])
 
     # unset to avoid some warning
     model.generation_config.temperature = None

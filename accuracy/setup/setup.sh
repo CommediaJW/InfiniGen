@@ -22,7 +22,14 @@
 #   python gen_llama_skewing_matrix.py \
 #     --model "${LLAMA_PATH}/llama-2-${size}" \
 #     --output "./skewing_matrix" 
-# done
+# # done
+python gen_llama_skewing_matrix.py \
+  --model "/nfs/shared_LLM_model/meta-llama/Llama-2-7b-chat-hf" \
+  --output "./skewing_matrix" 
+
+# python gen_longchat_skewing_matrix.py \
+#   --model "/nfs/shared_LLM_model/lmsys/longchat-7b-v1.5-32k" \
+#   --output "./skewing_matrix" 
 
 
 # # generate partial weight matrices for prediction
@@ -47,13 +54,20 @@ PARTIAL_RATIO=0.2
 #     --output "./weights"
 # done
 
-# llama
+# # llama
 python gen_partial_weight.py \
-  --skewing_matrix_path "./skewing_matrix/longchat-7b-v1.5-32k.pt" \
-  --model "/nfs/shared_LLM_model/lmsys/longchat-7b-v1.5-32k" \
+  --skewing_matrix_path "./skewing_matrix/Llama-2-7b-chat-hf.pt" \
+  --model "/nfs/shared_LLM_model/meta-llama/Llama-2-7b-chat-hf" \
   --model_type "llama" \
   --partial_weight_ratio $PARTIAL_RATIO \
   --output "./weights"
+
+# python gen_partial_weight_longchat.py \
+#   --skewing_matrix_path "./skewing_matrix/longchat-7b-v1.5-32k.pt" \
+#   --model "/nfs/shared_LLM_model/lmsys/longchat-7b-v1.5-32k" \
+#   --model_type "llama" \
+#   --partial_weight_ratio $PARTIAL_RATIO \
+#   --output "./weights"
 
 # # ========= w/o skewing (figure 13)
 # PARTIAL_RATIO=0.1
