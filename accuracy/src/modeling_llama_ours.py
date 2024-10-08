@@ -838,6 +838,7 @@ class LlamaForCausalLM(LlamaPreTrainedModel):
         )
 
         hidden_states = outputs[0]
+        hidden_states = hidden_states[:, -1:, :]
         logits = self.lm_head(hidden_states)
 
         loss = None
